@@ -1,6 +1,5 @@
 import subprocess, curses, curses.panel, json
 from useful import *
-from data import Global
 
 def show_network(stdscr, elem = "interfaces"):
     stdscr.clear()
@@ -21,6 +20,7 @@ def show_network(stdscr, elem = "interfaces"):
     key = stdscr.getch()
 
     if 49 <= key <= 51:
+        hidepanel(netw)
         stdscr.clear()
         show_network(stdscr,l_elem[key-49])
     else:
@@ -36,7 +36,7 @@ def network():
 
 
 def interfaces():
-    res = subprocess.check_output([Global.path, 'network']).decode("ascii");
+    res = subprocess.check_output(['./functions.sh', 'network']).decode("ascii");
     list = [];
     loop = [["tx","rx"],["bytes","packets"]];
     info = json.loads(res);
@@ -71,7 +71,7 @@ def interfaces():
     return list;
 
 def routes():
-    res = subprocess.check_output([Global.path, 'route']).decode("ascii")
+    res = subprocess.check_output(['./functions.sh', 'route']).decode("ascii")
     info = json.loads(res);
 
     list = [];
@@ -92,7 +92,7 @@ def routes():
     return list;
 
 def forward():
-    res = subprocess.check_output([Global.path, 'forwrd']).decode("ascii")
+    res = subprocess.check_output(['./functions.sh', 'forwrd']).decode("ascii")
     if (res != 0):
         res = "FALSE"
     else:
@@ -100,3 +100,9 @@ def forward():
 
     obj=[{'Forward': res}];
     return obj;
+
+def hidepanel(list):
+    for item in list:
+        item.hide()
+    return
+        

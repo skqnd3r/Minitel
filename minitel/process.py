@@ -1,17 +1,15 @@
 import subprocess, curses, time, curses.panel
 from useful import *
-from data import Global
 
-sort=""
+sort = ""
 
 def show_process(stdscr,sort = "pid"):
-
     stdscr.clear()
     dict = process(sort)
     keys = [*dict[0]]
     row_len = lenlist(dict);
     proc = board_panel(dict, keys, row_len)
-    more = ["1:sort","2:run","3:stop","4:kill"]
+    more = ["1:sort"]
     move_center(stdscr,proc)
     print_down(stdscr,more)
     curses.panel.update_panels()
@@ -47,7 +45,7 @@ def show_process(stdscr,sort = "pid"):
         return
 
 def process(sort):
-    str = subprocess.check_output([Global.path, 'proc', sort]).decode("ascii")
+    str = subprocess.check_output(['./functions.sh', 'proc', sort]).decode("ascii")
     Process = []
 
     # clean infos
@@ -64,22 +62,22 @@ def process(sort):
             item = tmp
 
             # parsing infos
-            if real_proc(item[1]):
+            # if real_proc(item[1]):
                 # transform into key value
-                obj = {}
-                obj.update({'PID': item[0]})
-                obj.update({'NAME': item[1]})
-                obj.update({'STATUS': item[2]})
-                obj.update({'%CPU': item[3]})
-                obj.update({'%MEM': item[4]})
-                obj.update({'PPID': item[5]})
-                Process.append(obj)
+            obj = {}
+            obj.update({'PID': item[0]})
+            obj.update({'NAME': item[1]})
+            obj.update({'STATUS': item[2]})
+            obj.update({'%CPU': item[3]})
+            obj.update({'%MEM': item[4]})
+            obj.update({'PPID': item[5]})
+            Process.append(obj)
     return Process
 
-# verif dictionnaire
-def real_proc(name):
-    out = {'ps', 'functions.sh', 'tail'}
-    for o in out:
-        if name == o:
-            return False
-    return True
+# # verif dictionnaire
+# def real_proc(name):
+#     out = {'ps', 'functions.sh', 'tail'}
+#     for o in out:
+#         if name == o:
+#             return False
+#     return True
